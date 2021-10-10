@@ -1,0 +1,26 @@
+{
+  "name": "expenses-back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "start:dev": "export ROARR_LOG=true && nodemon index.js | roarr pretty-print",
+    "migrate": "sqitch deploy db:$DATABASE_URL",
+    "verify": "sqitch verify db:$DATABASE_URL",
+    "revert": "sqitch revert db:$DATABASE_URL"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "date-fns": "^2.24.0",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0",
+    "node-fetch": "^3.0.0",
+    "pg": "^8.7.1",
+    "slonik": "^24.1.0",
+    "slonik-interceptor-query-logging": "^1.3.9"
+  }
+}

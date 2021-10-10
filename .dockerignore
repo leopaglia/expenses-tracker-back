@@ -1,0 +1,14 @@
+# node_modules
+# .git
+# .gitignore
+# .dockerignore
+# .prettierrc.json
+# package-lock.json
+
+*
+!src
+!package.json
+!config.js
+!index.js
+!sqitch
+!sqitch.conf
