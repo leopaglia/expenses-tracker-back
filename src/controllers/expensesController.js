@@ -32,7 +32,7 @@ export const createExpense = controller(
 
     if (!categoryExists) {
       return res.status(400).json({
-        error: "'category' parameter has to be an existing category.",
+        error: "'category' parameter has to be an existing category id.",
       })
     }
 
@@ -60,5 +60,78 @@ export const createExpense = controller(
     })
 
     return res.status(201).json(expense)
+  }
+)
+
+export const getRecurringExpenses = controller({}, async (_, res) => {
+  const recurringExpenses = await expensesRepository.fetchRecurring()
+
+  return res.status(200).json(recurringExpenses)
+})
+
+export const createRecurringExpense = controller(
+  { required: ['frequency', 'category_id', 'currency', 'name'] }, 
+  async (req, res) => {
+    const { frequency, category_id, currency, name, total } = req.body
+
+    const categoryExists = await categoriesRepository.existsByID(category_id)
+
+    if (!categoryExists) {
+      return res.status(400).json({
+        error: "'category' parameter has to be an existing category id.",
+      })
+    }
+
+    const recurringExpense = await expensesRepository.insertRecurringExpense({
+      frequency,
+      category_id,
+      currency,
+      total,
+      name,
+    })
+
+    return res.status(201).json(recurringExpense)
+  }
+)
+
+export const getIncompleteExpenses = controller({}, async (_, res) => {
+  const incompleteExpenses = await expensesRepository.fetchIncomplete()
+
+  return res.status(200).json(incompleteExpenses)
+})
+
+export const completeExpense = controller(
+  { required: ['total'] }, 
+  async (req, res) => {
+    const { expenseID } = req.params
+    const { total } = req.body
+
+    const incompleteExpenseExists = await expensesRepository.incompleteExistsByID(expenseID)
+
+    if (!incompleteExpenseExists) {
+      return res.status(400).json({
+        error: "route parameter has to be an existing incomplete expoense id.",
+      })
+    }
+
+    const incompleteExpense = await expensesRepository.fetchIncompleteByID(expenseID)
+    
+    // this loads rate from the day the expense it's being completed, not the day that the payment is fulfilled
+    const rate = await fixer.getRate(incompleteExpense.currency)
+
+    // the following 2 actions should be moved into repository and re-coded as a transaction
+
+    const newExpense = await expensesRepository.insertExpense({ 
+      name: incompleteExpense.name,
+      date: incompleteExpense.date,
+      currency: incompleteExpense.currency,
+      category_id: incompleteExpense.category_id,
+      rate,
+      total
+    })
+
+    await expensesRepository.deleteIncompleteByID(expenseID)
+
+    return res.status(201).json(newExpense)
   }
 )

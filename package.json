@@ -12,7 +12,8 @@
     "start:dev": "export ROARR_LOG=true && nodemon index.js | roarr pretty-print",
     "migrate": "sqitch deploy db:$DATABASE_URL",
     "verify": "sqitch verify db:$DATABASE_URL",
-    "revert": "sqitch revert db:$DATABASE_URL"
+    "revert": "sqitch revert db:$DATABASE_URL",
+    "job:createExpensesFromRecurring": "node src/jobs/createExpensesFromRecurring.js"
   },
   "author": "",
   "license": "ISC",
