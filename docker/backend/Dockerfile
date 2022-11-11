@@ -20,7 +20,7 @@ RUN npm install -g nodemon @roarr/cli
 
 WORKDIR /
 COPY ../../package.json .
-RUN npm install
+RUN npm install -f
 
 WORKDIR /backend
 COPY ../../ .
