@@ -13,7 +13,6 @@
     "migrate": "sqitch deploy db:$DATABASE_URL",
     "verify": "sqitch verify db:$DATABASE_URL",
     "revert": "sqitch revert db:$DATABASE_URL",
-    "job:createExpensesFromRecurring": "node src/jobs/createExpensesFromRecurring.js",
     "db:prod": "heroku pg:psql -a expenses-tracker-back"
   },
   "author": "",
@@ -23,6 +22,7 @@
     "date-fns": "^2.24.0",
     "express": "^4.17.1",
     "morgan": "^1.10.0",
+    "node-cron": "^3.0.2",
     "node-fetch": "^3.0.0",
     "pg": "^8.7.1",
     "slonik": "^24.1.0",
